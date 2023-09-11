@@ -9,5 +9,7 @@ abstract class GameRepository {
   Future<DeveloperDataEntity> getAllDevelopers({String? page});
   Future<GameEntity> searchGames({String? text});
   Future<GameDetailEntity?> getDetailGame({required int id});
+  Future<DeveloperData?> getDeveloperDetailGame({required int id});
+  Future<CreatorEntity?> getCreatorDetailGame({required int id});
   Future<GameDetailEntity?> getDetailGameLocal({required int id});
 }

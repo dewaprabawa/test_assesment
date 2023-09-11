@@ -8,6 +8,8 @@ import 'package:test_assesment/features/data/data_sources/remote/game_remote_dat
 import 'package:test_assesment/features/data/repositories/game_repository_impl.dart';
 import 'package:test_assesment/features/domain/repositories/game_repository.dart';
 import 'package:test_assesment/features/domain/usecases/get_all_creator_usecase.dart';
+import 'package:test_assesment/features/domain/usecases/get_detail_creator_usecase.dart';
+import 'package:test_assesment/features/domain/usecases/get_detail_developer_usecase.dart';
 import 'package:test_assesment/features/domain/usecases/get_detail_game_local_usecase.dart';
 import 'package:test_assesment/features/presentation/creator_cubit/home_creator_cubit.dart';
 import 'package:test_assesment/features/presentation/detail_cubit/detail_game_cubit.dart';
@@ -43,8 +45,8 @@ class ServiceLocator {
 
     sl.registerFactory(() => HomeGameCubit(sl(), sl()));
     sl.registerFactory(() => DetailGameCubit(sl(), sl()));
-    sl.registerFactory(() => HomeCreatorCubit(sl()));
-    sl.registerFactory(() => DeveloperCubit(sl()));
+    sl.registerFactory(() => HomeCreatorCubit(sl(), sl()));
+    sl.registerFactory(() => DeveloperCubit(sl(), sl()));
 
     sl.registerLazySingleton(() => GetAllDeveloperUsecase(sl()));
     sl.registerLazySingleton(() => GetAllCreatorUsecase(sl()));
@@ -52,5 +54,7 @@ class ServiceLocator {
     sl.registerLazySingleton(() => SearchGameUsecase(sl()));
     sl.registerLazySingleton(() => GetDetailGameUsecase(sl()));
     sl.registerLazySingleton(() => GetDetailGameLocalUsecase(sl()));
+    sl.registerLazySingleton(() => GetDetailDeveloperUsecase(sl()));
+    sl.registerLazySingleton(() => GetDetailCreatorUsecase(sl()));
   }
 }

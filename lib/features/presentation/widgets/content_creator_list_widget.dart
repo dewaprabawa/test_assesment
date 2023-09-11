@@ -5,10 +5,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:test_assesment/core/extension/text_style_ext.dart';
 import 'package:test_assesment/features/domain/entities/creator_entity.dart';
 import 'package:test_assesment/features/presentation/export_blocs.dart';
-import '../pages/home_detail_page.dart';
+import 'package:test_assesment/features/presentation/pages/creator_detail_page.dart';
+import '../pages/game_detail_page.dart';
 
 class ContentCreatorListWidget extends StatefulWidget {
-  const ContentCreatorListWidget({Key? key});
+  const ContentCreatorListWidget({Key? key}):super(key: key);
 
   @override
   State<ContentCreatorListWidget> createState() =>
@@ -47,7 +48,12 @@ class _ContentCreatorListWidgetState extends State<ContentCreatorListWidget> {
         centerTitle: false,
       ),
       body: BlocConsumer<HomeCreatorCubit, HomeCreatorState>(
-        listener: (context, state) {},
+        listener: (context, state) {
+          if (state.stateEnum == CreatorStateStatus.Failure) {
+            ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(state.message ?? "-").toNormalText()));
+          }
+        },
         builder: (context, state) {
           return _buildContent(context, cubit, state);
         },
@@ -57,19 +63,17 @@ class _ContentCreatorListWidgetState extends State<ContentCreatorListWidget> {
 
   Widget _buildContent(
       BuildContext context, HomeCreatorCubit cubit, HomeCreatorState state) {
-    switch (state.runtimeType) {
-      case HomeCreatorInitial:
+    switch (state.stateEnum) {
+      case CreatorStateStatus.Initial:
         return const SizedBox.shrink();
-      case HomeCreatorLoading:
+      case CreatorStateStatus.Loading:
         return const Center(
           child: CircularProgressIndicator.adaptive(),
         );
-      case HomeCreatorFailure:
-        final failureState = state as HomeCreatorFailure;
-        return Text(failureState.message);
-      case HomeCreatorLoaded:
-        final loadedState = state as HomeCreatorLoaded;
-        return _buildLoadedContent(context, cubit, loadedState.creators);
+      case CreatorStateStatus.Failure:
+        return Text(state.message ?? '-').toBoldText();
+      case CreatorStateStatus.Loaded:
+        return _buildLoadedContent(context, cubit, state.creators ?? []);
       default:
         return const SizedBox.shrink();
     }
@@ -138,9 +142,9 @@ class _ContentCreatorListWidgetState extends State<ContentCreatorListWidget> {
           Navigator.push(
             context,
             CupertinoPageRoute(
-              builder: (context) => DetailGamePage(
-                gameId: item.id!,
-                title: item.name,
+              builder: (context) => CreatorDetailPage(
+                id: item.id!,
+                title: item.name ?? "-",
               ),
             ),
           );
@@ -187,8 +191,7 @@ class _ContentCreatorListWidgetState extends State<ContentCreatorListWidget> {
                         ),
                         const SizedBox(width: 5),
                         const Text("Game Released -").toNormalText(),
-                        Text(item.gamesCount.toString() ?? "-")
-                            .toBoldText(),
+                        Text(item.gamesCount.toString() ?? "-").toBoldText(),
                       ],
                     ),
                   ],

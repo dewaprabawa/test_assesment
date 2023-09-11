@@ -16,6 +16,7 @@ class DeveloperData {
   final String? slug;
   final String? image;
   final String? imageBackground;
+  final String? description;
   final int? gamesCount;
   final List<Game>? games;
 
@@ -27,6 +28,7 @@ class DeveloperData {
     this.imageBackground,
     this.gamesCount,
     this.games,
+    this.description,
   });
 
   factory DeveloperData.fromJson(Map<String, dynamic> json) => DeveloperData(
@@ -39,5 +41,6 @@ class DeveloperData {
         games: json["games"] == null
             ? []
             : List<Game>.from(json["games"]!.map((x) => Game.fromJson(x))),
+            description: json["description"] ?? "",
       );
 }

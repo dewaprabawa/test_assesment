@@ -8,7 +8,7 @@ import 'package:test_assesment/features/domain/entities/game_data_entity.dart';
 import 'package:test_assesment/features/presentation/home_cubit/home_game_cubit.dart';
 import 'package:test_assesment/features/presentation/widgets/content_game_list_widget.dart';
 import 'package:test_assesment/features/domain/entities/genre_entity.dart';
-import '../pages/home_detail_page.dart';
+import '../pages/game_detail_page.dart';
 
 class GetStartedGameWidget extends StatelessWidget {
   const GetStartedGameWidget({super.key});
@@ -29,12 +29,32 @@ class GetStartedGameWidget extends StatelessWidget {
           child: CircularProgressIndicator.adaptive(),
         );
       case HomeGameFailure value:
-        return Text(value.message);
+        return _buildErrorState(context, value.message);
       case HomeGameLoaded(games: var items):
         return _buildLoadedContent(context,items);
       default:
         return const SizedBox.shrink();
     }
+  }
+
+  Widget _buildErrorState(BuildContext context, String value){
+    return Column(
+          children: [
+            Text(value).toBoldText(),
+            OutlinedButton(
+              style: OutlinedButton.styleFrom(
+                maximumSize: const Size(200, 60)
+              ),
+              onPressed: (){
+              context.read<HomeGameCubit>().getAllGames();
+            }, child:  Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+              const Icon(Icons.replay_outlined),
+              const Text("Reload").toBoldText()
+            ],))
+          ],
+        );
   }
 
   Widget _buildLoadedContent(BuildContext context, List<GameData> items) {
@@ -98,7 +118,7 @@ class GetStartedGameWidget extends StatelessWidget {
         Navigator.push(
           context,
           CupertinoPageRoute(
-            builder: (context) => DetailGamePage(
+            builder: (context) => GameDetailPage(
               gameId: item.id!,
               title: item.name,
             ),

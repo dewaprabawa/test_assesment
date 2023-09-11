@@ -1,27 +1,37 @@
 part of 'home_developer_cubit.dart';
 
-sealed class DeveloperState extends Equatable {
-  const DeveloperState();
+enum DeveloperStateStatus { Initial, Loading, Loaded, Failure }
+
+class DeveloperState extends Equatable {
+  final List<DeveloperData>? developers;
+  final DeveloperData? developer;
+  final String? message;
+  final DeveloperStateStatus stateEnum;
+
+  const DeveloperState(
+      {this.stateEnum = DeveloperStateStatus.Initial,
+      this.developer,
+      this.developers,
+      this.message});
+
+  DeveloperState copyWith(
+    {DeveloperStateStatus? stateEnum,
+    List<DeveloperData>? developers,
+    DeveloperData? developer,
+    String? message}
+  ) {
+    return DeveloperState(
+        stateEnum: stateEnum ?? this.stateEnum,
+        developer: developer ?? this.developer,
+        developers: developers ?? this.developers,
+        message: message ?? this.message);
+  }
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [
+        developer,
+        developers,
+        stateEnum,
+        message
+      ];
 }
-
-final class DeveloperInitial extends DeveloperState {}
-
-final class DeveloperLoading extends DeveloperState {}
-
-final class DeveloperLoaded extends DeveloperState {
-  final List<DeveloperData> developers;
-
-  const DeveloperLoaded({required this.developers});
-}
-
-final class DeveloperFailure extends DeveloperState {
-  final String message;
-
-  const DeveloperFailure({required this.message});
-}
-
-
-

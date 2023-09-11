@@ -1,11 +1,9 @@
-import 'dart:math';
-
 import 'package:test_assesment/core/common/network_checker.dart';
 import 'package:test_assesment/core/error/exceptions.dart';
 import 'package:test_assesment/features/data/data_sources/locale/game_local_data_source.dart';
 import 'package:test_assesment/features/data/data_sources/remote/game_remote_data_source.dart';
-import 'package:test_assesment/features/data/data_sources/remote/models/creator_model.dart';
 import 'package:test_assesment/features/domain/entities/creator_entity.dart';
+import 'package:test_assesment/features/domain/entities/developer_entity.dart';
 import 'package:test_assesment/features/domain/entities/developer_game_entity.dart';
 import 'package:test_assesment/features/domain/entities/game_detail_entity.dart';
 import 'package:test_assesment/features/domain/entities/game_data_entity.dart';
@@ -97,7 +95,6 @@ class GameRepositoryImpl implements GameRepository {
         }
         return allCreators;
       } catch (error) {
-        print(error);
         throw ServerException();
       }
     } else {
@@ -121,6 +118,38 @@ class GameRepositoryImpl implements GameRepository {
             await _remoteDataSource.getAllDeveloperGames(page: page);
         return allDevelopers;
       } catch (_) {
+        throw ServerException();
+      }
+    } else {
+      throw SocketException();
+    }
+  }
+
+  @override
+  Future<CreatorEntity?> getCreatorDetailGame({required int id}) async {
+      if (await _networkInfo.isConnected) {
+      try {
+        final creator =
+            await _remoteDataSource.getCreatorDetailGame(id: id);
+        return creator;
+      } catch (error) {
+        print(error);
+        throw ServerException();
+      }
+    } else {
+      throw SocketException();
+    }
+  }
+
+  @override
+  Future<DeveloperData?> getDeveloperDetailGame({required int id}) async {
+     if (await _networkInfo.isConnected) {
+      try {
+        final developer =
+            await _remoteDataSource.getDeveloperDetailGame(id: id);
+        return developer;
+      } catch (error) {
+        print(error);
         throw ServerException();
       }
     } else {

@@ -11,7 +11,7 @@ class CreatorModel extends CreatorEntity {
   factory CreatorModel.fromJson(Map<String, dynamic> json) => CreatorModel(
         count: json["count"],
         next: json["next"],
-        previous: json["previous"],
+        previous: json["previous"] ?? "",
         results: json["results"] == null
             ? []
             : List<CreatorData>.from(

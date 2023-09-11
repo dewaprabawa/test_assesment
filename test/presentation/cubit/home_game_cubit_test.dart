@@ -5,18 +5,22 @@ import 'package:test_assesment/features/domain/entities/game_data_entity.dart';
 import 'package:test_assesment/features/domain/usecases/get_all_game_usecase.dart';
 import 'package:test_assesment/core/error/exceptions.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:test_assesment/features/domain/usecases/search_game_usecase.dart';
 import 'package:test_assesment/features/presentation/home_cubit/home_game_cubit.dart';
 import 'home_game_cubit_test.mocks.dart';
 
-@GenerateNiceMocks([MockSpec<GetAllGameUsecase>()])
+@GenerateNiceMocks([MockSpec<GetAllGameUsecase>(), MockSpec<SearchGameUsecase>()])
 void main() {
   group('HomeGameCubit', () {
     late HomeGameCubit homeGameCubit;
     late MockGetAllGameUsecase mockGetAllGameUsecase;
+    late MockSearchGameUsecase mockSearchGameUsecase;
+    
 
     setUp(() {
       mockGetAllGameUsecase = MockGetAllGameUsecase();
-      homeGameCubit = HomeGameCubit(mockGetAllGameUsecase);
+      mockSearchGameUsecase = MockSearchGameUsecase();
+      homeGameCubit = HomeGameCubit(mockGetAllGameUsecase,mockSearchGameUsecase);
     });
 
     tearDown(() {
@@ -30,9 +34,9 @@ void main() {
     blocTest<HomeGameCubit, HomeGameState>(
       'emits [HomeGameLoaded] when GetAllGameUsecase succeeds',
       build: () {
-        when(() => mockGetAllGameUsecase.call(any)).thenAnswer(
-          (_) async => GameEntity(results: [GameData()]),
-        );
+        // when(() => mockGetAllGameUsecase.call(any)).thenAnswer(
+        //   (_) async => GameEntity(results: [GameData()]),
+        // );
         return homeGameCubit;
       },
       act: (cubit) => cubit.getAllGames(),

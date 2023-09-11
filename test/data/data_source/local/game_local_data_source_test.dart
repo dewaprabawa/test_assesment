@@ -6,6 +6,7 @@ import 'package:test_assesment/core/error/exceptions.dart';
 import 'package:test_assesment/features/data/data_sources/locale/game_local_data_source.dart';
 import 'package:test_assesment/features/data/data_sources/locale/objects/13_game_data_object.dart';
 import 'package:test_assesment/features/data/data_sources/locale/objects/14_game_detail_object.dart';
+import 'package:test_assesment/features/data/data_sources/locale/objects/15_creator_data_object.dart';
 import 'package:test_assesment/features/data/data_sources/remote/models/game_detail_model.dart';
 import 'package:test_assesment/features/domain/entities/game_data_entity.dart';
 
@@ -17,11 +18,13 @@ void main() {
   late GameLocalDataSourceImpl dataSource;
   late MockBox<GameDataObject> mockGameDataObjectBox;
   late MockBox<GameDetailObject> mockGameDetailObjectBox;
+  late MockBox<CreatorDataObject> mockCreatorDataObjectBox;
 
   setUp(() {
     mockGameDataObjectBox = MockBox<GameDataObject>();
     mockGameDetailObjectBox = MockBox<GameDetailObject>();
-    dataSource = GameLocalDataSourceImpl(mockGameDataObjectBox, mockGameDetailObjectBox);
+    mockCreatorDataObjectBox = MockBox<CreatorDataObject>();
+    dataSource = GameLocalDataSourceImpl(mockGameDataObjectBox, mockGameDetailObjectBox, mockCreatorDataObjectBox);
   });
 
   group('persistGame', () {

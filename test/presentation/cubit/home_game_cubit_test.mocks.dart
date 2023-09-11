@@ -3,15 +3,17 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i4;
+import 'dart:async' as _i5;
 
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:test_assesment/features/domain/entities/game_data_entity.dart'
-    as _i5;
+    as _i3;
 import 'package:test_assesment/features/domain/repositories/game_repository.dart'
     as _i2;
 import 'package:test_assesment/features/domain/usecases/get_all_game_usecase.dart'
-    as _i3;
+    as _i4;
+import 'package:test_assesment/features/domain/usecases/search_game_usecase.dart'
+    as _i6;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -35,10 +37,20 @@ class _FakeGameRepository_0 extends _i1.SmartFake
         );
 }
 
+class _FakeGameEntity_1 extends _i1.SmartFake implements _i3.GameEntity {
+  _FakeGameEntity_1(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
 /// A class which mocks [GetAllGameUsecase].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockGetAllGameUsecase extends _i1.Mock implements _i3.GetAllGameUsecase {
+class MockGetAllGameUsecase extends _i1.Mock implements _i4.GetAllGameUsecase {
   @override
   _i2.GameRepository get repository => (super.noSuchMethod(
         Invocation.getter(#repository),
@@ -52,12 +64,52 @@ class MockGetAllGameUsecase extends _i1.Mock implements _i3.GetAllGameUsecase {
         ),
       ) as _i2.GameRepository);
   @override
-  _i4.Future<_i5.GameEntity?> call(String? params) => (super.noSuchMethod(
+  _i5.Future<_i3.GameEntity?> call(String? params) => (super.noSuchMethod(
         Invocation.method(
           #call,
           [params],
         ),
-        returnValue: _i4.Future<_i5.GameEntity?>.value(),
-        returnValueForMissingStub: _i4.Future<_i5.GameEntity?>.value(),
-      ) as _i4.Future<_i5.GameEntity?>);
+        returnValue: _i5.Future<_i3.GameEntity?>.value(),
+        returnValueForMissingStub: _i5.Future<_i3.GameEntity?>.value(),
+      ) as _i5.Future<_i3.GameEntity?>);
+}
+
+/// A class which mocks [SearchGameUsecase].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockSearchGameUsecase extends _i1.Mock implements _i6.SearchGameUsecase {
+  @override
+  _i2.GameRepository get repository => (super.noSuchMethod(
+        Invocation.getter(#repository),
+        returnValue: _FakeGameRepository_0(
+          this,
+          Invocation.getter(#repository),
+        ),
+        returnValueForMissingStub: _FakeGameRepository_0(
+          this,
+          Invocation.getter(#repository),
+        ),
+      ) as _i2.GameRepository);
+  @override
+  _i5.Future<_i3.GameEntity> call(String? params) => (super.noSuchMethod(
+        Invocation.method(
+          #call,
+          [params],
+        ),
+        returnValue: _i5.Future<_i3.GameEntity>.value(_FakeGameEntity_1(
+          this,
+          Invocation.method(
+            #call,
+            [params],
+          ),
+        )),
+        returnValueForMissingStub:
+            _i5.Future<_i3.GameEntity>.value(_FakeGameEntity_1(
+          this,
+          Invocation.method(
+            #call,
+            [params],
+          ),
+        )),
+      ) as _i5.Future<_i3.GameEntity>);
 }

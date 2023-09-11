@@ -5,12 +5,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:test_assesment/core/extension/text_style_ext.dart';
 import 'package:test_assesment/features/domain/entities/creator_entity.dart';
 import 'package:test_assesment/features/presentation/creator_cubit/home_creator_cubit.dart';
-import 'package:test_assesment/features/presentation/pages/home_detail_page.dart';
 import 'package:test_assesment/features/presentation/widgets/content_creator_list_widget.dart';
 
 
 class GetCreatorGameWidget extends StatelessWidget {
-  const GetCreatorGameWidget({Key? key});
+  const GetCreatorGameWidget({Key? key}):super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,17 +18,17 @@ class GetCreatorGameWidget extends StatelessWidget {
   }
 
   Widget _buildContent(BuildContext context, HomeCreatorState state) {
-    switch (state) {
-      case HomeCreatorInitial():
+    switch (state.stateEnum) {
+      case CreatorStateStatus.Initial:
         return const SizedBox.shrink();
-      case HomeCreatorLoading():
+      case CreatorStateStatus.Loading:
         return const Center(
           child: CircularProgressIndicator.adaptive(),
         );
-      case HomeCreatorFailure value:
-        return Text(value.message);
-      case HomeCreatorLoaded(creators: var items):
-        return _buildLoadedContent(context, items);
+      case CreatorStateStatus.Failure:
+        return _buildErrorState(context, state.message ?? "-");
+      case CreatorStateStatus.Loaded:
+        return _buildLoadedContent(context, state.creators ?? []);
       default:
         return const SizedBox.shrink();
     }
@@ -37,7 +36,7 @@ class GetCreatorGameWidget extends StatelessWidget {
 
   Widget _buildLoadedContent(BuildContext context, List<CreatorData> items) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 15),
+      padding: const EdgeInsets.symmetric(horizontal: 15),
       child: Column(
         children: [
           _buildHeader(context),
@@ -46,6 +45,26 @@ class GetCreatorGameWidget extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Widget _buildErrorState(BuildContext context, String value){
+    return Column(
+          children: [
+            Text(value).toBoldText(),
+            OutlinedButton(
+              style: OutlinedButton.styleFrom(
+                maximumSize: const Size(200, 60)
+              ),
+              onPressed: (){
+              context.read<HomeCreatorCubit>().getCreatorGames();
+            }, child:  Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+              const Icon(Icons.replay_outlined),
+              const Text("Reload").toBoldText()
+            ],))
+          ],
+        );
   }
 
   Widget _buildHeader(BuildContext context) {
@@ -93,12 +112,12 @@ class GetCreatorGameWidget extends StatelessWidget {
     final bannerURL = item.image;
     return InkWell(
       onTap: () {
-        Navigator.push(
-          context,
-          CupertinoPageRoute(
-            builder: (context) => DetailGamePage(gameId: item.id!),
-          ),
-        );
+         Navigator.push(
+              context,
+              CupertinoPageRoute(
+                builder: (context) => ContentCreatorListWidget(),
+              ),
+            );
       },
       child: Padding(
         padding: const EdgeInsets.only(right: 10),

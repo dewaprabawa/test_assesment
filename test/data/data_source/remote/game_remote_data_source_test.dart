@@ -7,6 +7,7 @@ import 'package:test_assesment/core/common/strings.dart';
 import 'package:test_assesment/core/error/exceptions.dart';
 import 'package:test_assesment/core/request/base_client.dart';
 import 'package:test_assesment/features/data/data_sources/remote/game_remote_data_source.dart';
+import 'package:test_assesment/features/data/data_sources/remote/models/creator_model.dart';
 import 'package:test_assesment/features/data/data_sources/remote/models/game_detail_model.dart';
 import 'package:test_assesment/features/data/data_sources/remote/models/game_model.dart';
 
@@ -15,21 +16,22 @@ import '../../../json/read_json_file.dart';
 import 'game_remote_data_source_test.mocks.dart';
 
 void main() {
-  group("GameRemoteDataSourceImpl", () {
     late GameRemoteDataSource gameRemoteDataSourceImpl;
-    late MockBaseClient mockBaseClient; // Use your generated mock
+    late MockBaseClient mockBaseClient; 
 
     setUp(() {
       mockBaseClient = MockBaseClient();
       gameRemoteDataSourceImpl = GameRemoteDataSourceImpl(mockBaseClient);
     });
 
+  group("GameRemoteDataSourceImpl", () {
+ 
     test('getAllGames should return a GameModel on success', () async {
       final jsonFilePath =
-          'test/json/game_json_response.json'; // Specify the path to your JSON file
+          'test/json/game_json_response.json'; 
       final jsonString = await readJsonFile(jsonFilePath);
       // Arrange
-      const String page = "1"; // Provide the page you want to test
+      const String page = "1"; 
 
       when(mockBaseClient.requestNetwork(
         method: Method.GET,
@@ -50,14 +52,14 @@ void main() {
 
     test('getAllGames should success on 200 status code', () async {
       final jsonFilePath =
-          'test/json/game_json_response.json'; // Specify the path to your JSON file
+          'test/json/game_json_response.json'; 
       final jsonString = await readJsonFile(jsonFilePath);
       // Arrange
       final String page = "1";
       final on200Response = Response(
           requestOptions: RequestOptions(path: ''),
           data: jsonString,
-          statusCode: 200); // Simulate a non-200 status code
+          statusCode: 200); 
 
       when(mockBaseClient.requestNetwork(
         method: Method.GET,
@@ -70,7 +72,7 @@ void main() {
       // Act & Assert
       expect(
         result,
-        isA<GameModel>(), // Expect the function to throw a ServerException
+        isA<GameModel>(), 
       );
     });
 
@@ -93,7 +95,7 @@ void main() {
       expect(
         () async => await gameRemoteDataSourceImpl.getAllGames(page: page),
         throwsA(isA<
-            ServerException>()), // Expect the function to throw a ServerException
+            ServerException>()),
       );
     });
 
@@ -116,7 +118,7 @@ void main() {
       expect(
         () async => await gameRemoteDataSourceImpl.getAllGames(page: page),
         throwsA(isA<
-            ServerNotFoundException>()), // Expect the function to throw a ServerException
+            ServerNotFoundException>()), 
       );
     });
 
@@ -182,9 +184,6 @@ test('getAllGames should throw ServerException on invalid JSON response', () asy
   );
 });
 
-
-
-
     test('getDetailGame should return a GameDetailModel on success', () async {
       final jsonFilePath =
           'test/json/game_detail_json_response.json'; // Specify the path to your JSON file
@@ -208,6 +207,73 @@ test('getAllGames should throw ServerException on invalid JSON response', () asy
       expect(result, isA<GameDetailModel>());
     });
   });
+  
+  group('getAllCreatorGames', () {
+    test('should return a valid CreatorModel when the response is 200', () async {
+      // Arrange
+      final page = "1";
+
+
+      final jsonFilePath =
+          'test/json/creator_json_response.json'; 
+      final jsonString = await readJsonFile(jsonFilePath);
+
+      when(mockBaseClient.requestNetwork(
+        method: Method.GET,
+        path: PathURLconstants.CREATOR,
+        queryParameters: {"page": page},
+      )).thenAnswer((_) async => Response(
+        statusCode: 200,
+        requestOptions: RequestOptions(
+        path: "",
+        data: jsonString
+      )));
+
+      // Act
+      final result = await gameRemoteDataSourceImpl.getAllCreatorGames(page: page);
+
+      // Assert
+      expect(result, isA<CreatorModel>());
+    });
+
+    test('should throw a ServerNotFoundException when the response is 404', () async {
+      // Arrange
+      final page = "1";
+     
+      final jsonFilePath =
+          'test/json/creator_json_response.json'; 
+      final jsonString = await readJsonFile(jsonFilePath);
+
+      when(mockBaseClient.requestNetwork(
+        method: Method.GET,
+        path: PathURLconstants.CREATOR,
+        queryParameters: {"page": page},
+      )).thenAnswer((_) async => Response(
+        statusCode: 404,
+        requestOptions: RequestOptions(
+        data: jsonString
+      )));
+
+      // Act and Assert
+      expect(() => gameRemoteDataSourceImpl.getAllCreatorGames(page: page), throwsA(isA<ServerNotFoundException>()));
+    });
+
+    test('should throw a ServerException when the response is not 200 or 404', () async {
+      // Arrange
+      final page = "1";
+      final response = MockResponse();
+      when(mockBaseClient.requestNetwork(
+        method: Method.GET,
+        path: PathURLconstants.CREATOR,
+        queryParameters: {"page": page},
+      )).thenAnswer((_) => Future.value(response));
+
+      // Act and Assert
+      expect(() => gameRemoteDataSourceImpl.getAllCreatorGames(page: page), throwsA(isA<ServerException>()));
+    });
+
+ 
+  });
 }
 
 
@@ -221,22 +287,22 @@ class TestBaseClient implements BaseClient {
     Map<String, dynamic>? queryParameters,
   }) async {
     final jsonFilePath =
-        'test/json/game_detail_json_response.json'; // Specify the path to your JSON file
+        'test/json/game_detail_json_response.json'; 
     final jsonString = await readJsonFile(jsonFilePath);
     // Simulate a 200 response for testing purposes
     if (path == "your_test_path") {
       return Response(
         requestOptions: RequestOptions(path: path),
         statusCode: 200,
-        data: jsonString, // Your desired response data
+        data: jsonString, 
       );
     }
 
-    // Simulate a non-200 response for testing error handling
+   
     return Response(
       requestOptions: RequestOptions(path: path),
-      statusCode: 404, // Or any other error code you want to simulate
-      data: {"error": "Not Found"}, // Your desired error response data
+      statusCode: 404, 
+      data: {"error": "Not Found"}, 
     );
   }
 }

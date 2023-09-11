@@ -5,18 +5,20 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:test_assesment/core/extension/text_style_ext.dart';
 import 'package:test_assesment/features/domain/entities/developer_game_entity.dart';
 import 'package:test_assesment/features/presentation/export_blocs.dart';
-import '../pages/home_detail_page.dart';
+import 'package:test_assesment/features/presentation/pages/developer_detail_page.dart';
+import '../pages/game_detail_page.dart';
 
 class ContentDeveloperListWidget extends StatefulWidget {
-  const ContentDeveloperListWidget({Key? key});
+  const ContentDeveloperListWidget({Key? key}):super(key: key);
 
   @override
   State<ContentDeveloperListWidget> createState() =>
       _ContentDeveloperListWidgetState();
 }
 
-class _ContentDeveloperListWidgetState extends State<ContentDeveloperListWidget> {
-  ScrollController _scrollController = ScrollController();
+class _ContentDeveloperListWidgetState
+    extends State<ContentDeveloperListWidget> {
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -47,7 +49,12 @@ class _ContentDeveloperListWidgetState extends State<ContentDeveloperListWidget>
         centerTitle: false,
       ),
       body: BlocConsumer<DeveloperCubit, DeveloperState>(
-        listener: (context, state) {},
+        listener: (context, state) {
+          if (state.stateEnum == DeveloperStateStatus.Failure) {
+            ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(state.message ?? "-").toNormalText()));
+          }
+        },
         builder: (context, state) {
           return _buildContent(context, cubit, state);
         },
@@ -57,19 +64,18 @@ class _ContentDeveloperListWidgetState extends State<ContentDeveloperListWidget>
 
   Widget _buildContent(
       BuildContext context, DeveloperCubit cubit, DeveloperState state) {
-    switch (state.runtimeType) {
-      case DeveloperInitial:
+    switch (state.stateEnum) {
+      case DeveloperStateStatus.Initial:
         return const SizedBox.shrink();
-      case DeveloperLoading:
+      case DeveloperStateStatus.Loading:
         return const Center(
           child: CircularProgressIndicator.adaptive(),
         );
-      case DeveloperFailure:
-        final failureState = state as DeveloperFailure;
-        return Text(failureState.message);
-      case DeveloperLoaded:
-        final loadedState = state as DeveloperLoaded;
-        return _buildLoadedContent(context, cubit, loadedState.developers);
+      case DeveloperStateStatus.Failure:
+        return Text(state.message ?? '-').toBoldText();
+      case DeveloperStateStatus.Loaded:
+        return _buildLoadedContent(
+            context, cubit, state.developers ?? []);
       default:
         return const SizedBox.shrink();
     }
@@ -138,9 +144,9 @@ class _ContentDeveloperListWidgetState extends State<ContentDeveloperListWidget>
           Navigator.push(
             context,
             CupertinoPageRoute(
-              builder: (context) => DetailGamePage(
-                gameId: item.id!,
-                title: item.name,
+              builder: (context) => DeveloperGameDetail(
+                id: item.id!,
+                title: item.name ?? "-",
               ),
             ),
           );
@@ -202,7 +208,8 @@ class _ContentDeveloperListWidgetState extends State<ContentDeveloperListWidget>
       ),
     );
   }
-Widget _buildDeveloperImage(String? bannerURL) {
+
+  Widget _buildDeveloperImage(String? bannerURL) {
     return Stack(
       children: [
         CachedNetworkImage(
@@ -227,6 +234,3 @@ Widget _buildDeveloperImage(String? bannerURL) {
     );
   }
 }
-
-
-

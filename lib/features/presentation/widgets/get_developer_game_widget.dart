@@ -4,12 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:test_assesment/core/extension/text_style_ext.dart';
 import 'package:test_assesment/features/domain/entities/developer_game_entity.dart';
-import 'package:test_assesment/features/presentation/developer_cubit/home_developer_cubit.dart';
-import 'package:test_assesment/features/presentation/pages/home_detail_page.dart';
-import 'package:test_assesment/features/presentation/widgets/content_developer_list_widget.dart';
+import 'package:test_assesment/features/presentation/export_blocs.dart';
+import 'package:test_assesment/features/presentation/export_widgets.dart';
 
 class GetDeveloperGameWidget extends StatelessWidget {
-  const GetDeveloperGameWidget({Key? key});
+  const GetDeveloperGameWidget({Key? key}):super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,17 +17,17 @@ class GetDeveloperGameWidget extends StatelessWidget {
   }
 
   Widget _buildContent(BuildContext context, DeveloperState state) {
-    switch (state) {
-      case DeveloperInitial():
+    switch (state.stateEnum) {
+      case DeveloperStateStatus.Initial:
         return const SizedBox.shrink();
-      case DeveloperLoading():
+      case DeveloperStateStatus.Loading:
         return const Center(
           child: CircularProgressIndicator.adaptive(),
         );
-      case DeveloperFailure value:
-        return Text(value.message);
-      case DeveloperLoaded(developers: var items):
-        return _buildLoadedContent(context, items);
+      case DeveloperStateStatus.Failure:
+        return _buildErrorState(context, state.message ?? "-");
+      case DeveloperStateStatus.Loaded:
+        return _buildLoadedContent(context, state.developers ?? []);
       default:
         return const SizedBox.shrink();
     }
@@ -36,7 +35,7 @@ class GetDeveloperGameWidget extends StatelessWidget {
 
   Widget _buildLoadedContent(BuildContext context, List<DeveloperData> items) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 15),
+      padding: const EdgeInsets.symmetric(horizontal: 15),
       child: Column(
         children: [
           _buildHeader(context),
@@ -46,6 +45,30 @@ class GetDeveloperGameWidget extends StatelessWidget {
       ),
     );
   }
+
+    Widget _buildErrorState(BuildContext context, String value){
+    return Center(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(value).toBoldText(),
+              OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                  maximumSize: const Size(200, 60)
+                ),
+                onPressed: (){
+                context.read<DeveloperCubit>().getDeveloperGames();
+              }, child:  Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                const Icon(Icons.replay_outlined),
+                const Text("Reload").toBoldText()
+              ],))
+            ],
+          ),
+    );
+  }
+  
 
   Widget _buildHeader(BuildContext context) {
     return Row(
@@ -93,11 +116,11 @@ class GetDeveloperGameWidget extends StatelessWidget {
     return InkWell(
       onTap: () {
         Navigator.push(
-          context,
-          CupertinoPageRoute(
-            builder: (context) => DetailGamePage(gameId: item.id!),
-          ),
-        );
+              context,
+              CupertinoPageRoute(
+                builder: (context) => ContentDeveloperListWidget(),
+              ),
+            );
       },
       child: Padding(
         padding: const EdgeInsets.only(right: 10),
