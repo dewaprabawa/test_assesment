@@ -11,8 +11,26 @@ class HomeGameCubit extends Cubit<HomeGameState> {
   final GetAllGameUsecase _getAllGameUsecase;
   final SearchGameUsecase _searchGameUsecase;
 
-
   HomeGameCubit(this._getAllGameUsecase, this._searchGameUsecase) : super(HomeGameInitial());
+
+  int _defaultPage = 1;
+  final List<GameData> _gamePerPages = [];
+
+  Future<void> getGamesByPage() async {
+    try {
+      _defaultPage++;
+      emit(const HomeGameLoading());
+      final data = await _getAllGameUsecase.call(_defaultPage.toString());
+      final gameList = data?.results;
+      if (gameList != null) {
+        _gamePerPages.addAll(gameList);
+        emit(HomeGameLoaded(_gamePerPages));
+      } 
+    } catch (exceptions) {
+      final errorMessage = _getErrorMessage(exceptions);
+      emit(HomeGameFailure(errorMessage));
+    }
+  }
 
   Future<void> getAllGames() async {
     emit(HomeGameLoading());

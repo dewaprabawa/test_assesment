@@ -11,6 +11,26 @@ class DeveloperCubit extends Cubit<DeveloperState> {
   final GetAllDeveloperUsecase _getAllDeveloperUsecase;
   DeveloperCubit(this._getAllDeveloperUsecase) : super(DeveloperInitial());
 
+   int _defaultPage = 1;
+  final List<DeveloperData> _developerPerPages = [];
+
+  Future<void> getCreatorsByPage() async {
+    try {
+      _defaultPage++;
+      emit(DeveloperLoading());
+      final data = await _getAllDeveloperUsecase.call(_defaultPage.toString());
+       final creatorList =  data?.results;
+      if (creatorList != null) {
+        _developerPerPages.addAll(creatorList);
+        emit(DeveloperLoaded(developers: _developerPerPages));
+      } 
+    } catch (exceptions) {
+      final errorMessage = _getErrorMessage(exceptions);
+      emit(DeveloperFailure(message:errorMessage));
+    }
+  }
+
+
   Future<void> getDeveloperGames() async {
     emit(DeveloperLoading());
     try {

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -31,4 +33,15 @@ extension BoldText on Text {
         style: GoogleFonts.raleway(
             fontWeight: FontWeight.w700, color: color, fontSize: fontSize),
       );
+}
+
+
+ Color generateRandomColor() {
+  final Random random = Random();
+  return Color.fromARGB(
+    255, // Alpha (fully opaque)
+    random.nextInt(256), // Red
+    random.nextInt(256), // Green
+    random.nextInt(256), // Blue
+  );
 }

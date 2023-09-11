@@ -1,4 +1,5 @@
 import 'package:hive/hive.dart';
+import 'package:test_assesment/features/data/data_sources/locale/objects/16_game_object.dart';
 import 'package:test_assesment/features/domain/entities/creator_entity.dart';
 
 part '15_creator_data_object.g.dart';
@@ -18,9 +19,9 @@ class CreatorDataObject {
   @HiveField(5)
   final int? gamesCount;
   @HiveField(6)
-  final List<Game>? positions;
+  final List<GameObject>? positions;
   @HiveField(7)
-  final List<Game>? games;
+  final List<GameObject>? games;
 
   CreatorDataObject({
     this.id,
@@ -42,14 +43,14 @@ class CreatorDataObject {
         imageBackground: entity.imageBackground,
         gamesCount: entity.gamesCount,
         games: entity.games
-            ?.map((element) => Game(
+            ?.map((element) => GameObject(
                 id: element.id,
                 slug: element.slug,
                 name: element.name,
                 added: element.added))
             .toList(),
         positions: entity.positions
-            ?.map((element) => Game(
+            ?.map((element) => GameObject(
                 id: element.id,
                 slug: element.slug,
                 name: element.name,

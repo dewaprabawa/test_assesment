@@ -23,8 +23,8 @@ class CreatorDataObjectAdapter extends TypeAdapter<CreatorDataObject> {
       image: fields[3] as String?,
       imageBackground: fields[4] as String?,
       gamesCount: fields[5] as int?,
-      positions: (fields[6] as List?)?.cast<Game>(),
-      games: (fields[7] as List?)?.cast<Game>(),
+      positions: (fields[6] as List?)?.cast<GameObject>(),
+      games: (fields[7] as List?)?.cast<GameObject>(),
     );
   }
 

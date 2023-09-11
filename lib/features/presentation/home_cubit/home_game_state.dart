@@ -9,7 +9,9 @@ sealed class HomeGameState extends Equatable {
 
 class HomeGameInitial extends HomeGameState {}
 
-class HomeGameLoading extends HomeGameState {}
+class HomeGameLoading extends HomeGameState {
+  const HomeGameLoading();
+}
 
 class HomeGameLoaded extends HomeGameState {
   final List<GameData> games;

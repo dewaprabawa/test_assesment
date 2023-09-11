@@ -12,6 +12,25 @@ class HomeCreatorCubit extends Cubit<HomeCreatorState> {
 
   HomeCreatorCubit(this._getAllCreatorUsecase) : super(HomeCreatorInitial());
 
+  int _defaultPage = 1;
+  final List<CreatorData> _creatorPerPages = [];
+
+  Future<void> getCreatorsByPage() async {
+    try {
+      _defaultPage++;
+      emit(HomeCreatorLoading());
+      final data = await _getAllCreatorUsecase.call(_defaultPage.toString());
+       final creatorList =  data?.results;
+      if (creatorList != null) {
+        _creatorPerPages.addAll(creatorList);
+        emit(HomeCreatorLoaded(creators: _creatorPerPages));
+      } 
+    } catch (exceptions) {
+      final errorMessage = _getErrorMessage(exceptions);
+      emit(HomeCreatorFailure(errorMessage));
+    }
+  }
+
    Future<void> getCreatorGames() async {
     emit(HomeCreatorLoading());
     try {

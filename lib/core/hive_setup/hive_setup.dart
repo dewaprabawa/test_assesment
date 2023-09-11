@@ -19,8 +19,8 @@ class HiveSetupDB {
     await RegisterRequirementObject.register();
     await RegisterEsrbRatingObject.register();
     await RegisterParentPlatformObject.register();
+    await RegisterGameObject.register();
     await RegisterCreatorDataObject.register();
-    await RegisterGameDataObject.register();
     await RegisterGameDataObject.register();
     await RegisterGameDetailObject.register();
   }

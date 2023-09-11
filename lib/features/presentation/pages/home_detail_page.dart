@@ -2,13 +2,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:test_assesment/core/extension/text_style_ext.dart';
-import 'package:test_assesment/features/domain/entities/developer_entity.dart';
-import 'package:test_assesment/features/domain/entities/genre_entity.dart';
 import 'package:test_assesment/features/presentation/detail_cubit/detail_game_cubit.dart';
 
 class DetailGamePage extends StatefulWidget {
   final int gameId;
-  const DetailGamePage({super.key, required this.gameId});
+  final String? title;
+  const DetailGamePage({super.key, required this.gameId, this.title});
 
   @override
   State<DetailGamePage> createState() => _DetailGamePageState();
@@ -31,6 +30,7 @@ class _DetailGamePageState extends State<DetailGamePage> {
         },
         builder: (conext, state) {
            return Scaffold(
+            appBar: AppBar(title: Text(widget.title ?? "-").toBoldText(),),
            bottomNavigationBar: Container(
             height: 100,
             decoration: BoxDecoration(

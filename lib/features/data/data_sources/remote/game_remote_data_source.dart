@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:test_assesment/core/common/strings.dart';
 import 'package:test_assesment/core/error/exceptions.dart';
@@ -27,6 +28,7 @@ class GameRemoteDataSourceImpl implements GameRemoteDataSource {
         path: PathURLconstants.GAMES,
         queryParameters: {"page": page ?? "1"});
     if (response?.statusCode == 200) {
+      print(response?.requestOptions.uri);
       try {
         return GameModel.fromJson(jsonDecode(response?.data));
       } catch (_) {
@@ -62,9 +64,10 @@ class GameRemoteDataSourceImpl implements GameRemoteDataSource {
   Future<CreatorModel> getAllCreatorGames({String? page}) async {
      final response = await baseClient.requestNetwork(
         method: Method.GET,
-        path: PathURLconstants.GAMES,
+        path: PathURLconstants.CREATOR,
         queryParameters: {"page": page ?? "1"});
     if (response?.statusCode == 200) {
+      log(response?.requestOptions.uri.toString() ?? "-");
       try {
         return CreatorModel.fromJson(jsonDecode(response?.data));
       } catch (_) {
@@ -82,7 +85,7 @@ class GameRemoteDataSourceImpl implements GameRemoteDataSource {
      final response = await baseClient.requestNetwork(
         method: Method.GET,
         path: PathURLconstants.DEVELOPER,
-        queryParameters: {"page": page ?? "1"});
+        queryParameters: {"page": page ?? page});
     if (response?.statusCode == 200) {
       try {
         return DeveloperDataModel.fromJson(jsonDecode(response?.data));

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:test_assesment/core/common/network_checker.dart';
 import 'package:test_assesment/core/error/exceptions.dart';
 import 'package:test_assesment/features/data/data_sources/locale/game_local_data_source.dart';
@@ -94,7 +96,8 @@ class GameRepositoryImpl implements GameRepository {
           await _localDataSource.persistCreator(creator);
         }
         return allCreators;
-      } catch (_) {
+      } catch (error) {
+        print(error);
         throw ServerException();
       }
     } else {
