@@ -1,0 +1,16 @@
+export 'package:hive_flutter/adapters.dart';
+export 'package:test_assesment/core/hive_setup/register/01_register_store_object.dart';
+export 'package:test_assesment/core/hive_setup/register/02_register_genre_object.dart';
+export 'package:test_assesment/core/hive_setup/register/03_register_rating_object.dart';
+export 'package:test_assesment/core/hive_setup/register/04_register_short_screen_shot_object.dart';
+export 'package:test_assesment/core/hive_setup/register/05_register_platform_object.dart';
+export 'package:test_assesment/core/hive_setup/register/06_register_developer_object.dart';
+export 'package:test_assesment/core/hive_setup/register/07_store_detail_object.dart';
+export 'package:test_assesment/core/hive_setup/register/09_platform_element_object.dart';
+export 'package:test_assesment/core/hive_setup/register/10_register_requirement_object.dart';
+export 'package:test_assesment/core/hive_setup/register/11_register_esrb_rating_object.dart';
+export 'package:test_assesment/core/hive_setup/register/12_parent_platform_object.dart';
+export 'package:test_assesment/core/hive_setup/register/13_register_game_data_object.dart';
+export 'package:test_assesment/core/hive_setup/register/14_register_game_detail_object.dart';
+export 'package:test_assesment/core/hive_setup/register/15_register_creator_data_object.dart';
+export 'package:test_assesment/core/hive_setup/register/16_register_game_object.dart';
