@@ -5,8 +5,8 @@ import 'package:test_assesment/features/domain/entities/game_data_entity.dart';
 
 abstract class GameRepository {
   Future<GameEntity?> getAllGames({String? page});
-  Future<CreatorEntity> getAllCreators({String? page});
-  Future<DeveloperDataEntity> getAllDevelopers({String? page});
+  Future<CreatorEntity?> getAllCreators({String? page});
+  Future<DeveloperDataEntity?> getAllDevelopers({String? page});
   Future<GameEntity> searchGames({String? text});
   Future<GameDetailEntity?> getDetailGame({required int id});
   Future<DeveloperData?> getDeveloperDetailGame({required int id});
