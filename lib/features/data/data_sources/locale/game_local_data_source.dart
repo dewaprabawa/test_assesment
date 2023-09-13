@@ -124,7 +124,6 @@ class GameLocalDataSourceImpl extends GameLocalDataSource {
       final creator = CreatorDataObject.fromEntity(creatorModel);
       await persistCreatorIfNotExists(creator);
     } catch (error) {
-      print(error);
       throw LocalException();
     }
   }

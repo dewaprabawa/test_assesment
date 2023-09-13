@@ -8,6 +8,7 @@ import 'package:test_assesment/features/data/data_sources/locale/objects/13_game
 import 'package:test_assesment/features/data/data_sources/locale/objects/14_game_detail_object.dart';
 import 'package:test_assesment/features/data/data_sources/locale/objects/15_creator_data_object.dart';
 import 'package:test_assesment/features/data/data_sources/remote/models/game_detail_model.dart';
+import 'package:test_assesment/features/domain/entities/creator_entity.dart';
 import 'package:test_assesment/features/domain/entities/game_data_entity.dart';
 
 import 'game_local_data_source_test.mocks.dart';
@@ -117,6 +118,41 @@ void main() {
       when(mockGameDetailObjectBox.get(1)).thenThrow(Exception());
 
       expect(() => dataSource.getDetailGame(id: 1), throwsA(isInstanceOf<LocalException>()));
+    });
+  });
+
+   group('getAllCreatorGames', () {
+    final creatorDataObjects = [
+      CreatorDataObject(id: 1, name: 'Test Game 1'),
+      CreatorDataObject(id: 2, name: 'Test Game 2'),
+    ];
+
+    test('should return a list of GameData entities', () async {
+      when(mockCreatorDataObjectBox.values).thenReturn(creatorDataObjects);
+
+      final result = await dataSource.getCreatorGames();
+
+     expect(result, allOf( 
+    hasLength(creatorDataObjects.length), 
+    everyElement(isA<CreatorData>()),
+  ));
+    });
+
+      test('should return a list of empty entities', () async {
+      when(mockCreatorDataObjectBox.values).thenReturn([]);
+
+      final result = await dataSource.getCreatorGames();
+
+     expect(result, allOf( 
+    hasLength(0), 
+    everyElement(isA<List>()),
+  ));
+    });
+
+    test('should throw LocalException when an error occurs', () async {
+      when(mockCreatorDataObjectBox.values).thenThrow(Exception());
+
+      expect(() => dataSource.getCreatorGames(), throwsA(isInstanceOf<LocalException>()));
     });
   });
 }
